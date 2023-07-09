@@ -1,7 +1,5 @@
-from asyncio import gather
 from scrapper.openfoodfacts import raspagem_catalogo_produtos, raspar_urls_produtos
 from rocketry import Rocketry
-from rocketry.args import Return
 from rocketry.conds import after_fail, retry, after_success
 import logging
 
