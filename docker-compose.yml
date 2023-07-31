@@ -1,0 +1,32 @@
+version: "3.2"
+
+networks:
+    backend:
+
+services:
+    scrapper:
+        image: backend-scrapper
+        container_name: scrapper-produtos
+        hostname: backend-scrapper
+        networks:
+            - backend
+        command: ["python", "tasks/tasks.py"]
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+    api:
+        image: backend-scrapper
+        container_name: api-produtos
+        hostname: backend-scrapper
+        networks:
+            - backend
+        command: ["uvicorn", "api.api:app", "--host", "0.0.0.0", "--port", "80"]
+
+        build:
+            context: .
+            dockerfile: Dockerfile
+        environment:
+            PORT: 80
+        ports:
+            - '80:80'

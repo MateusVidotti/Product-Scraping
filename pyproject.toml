@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "product-scraping"
+version = "0.1.0"
+description = ""
+authors = ["mateu <mateus.vidotti@idgeo.com.br>"]
+readme = "README.md"
+packages = [{include = "product_scraping"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+parsel = "^1.8.1"
+httpx = "^0.24.1"
+requests = "^2.31.0"
+uvicorn = "^0.22.0"
+rocketry = "^2.5.1"
+odmantic = "^0.9.2"
+fastapi-pagination = "^0.12.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
