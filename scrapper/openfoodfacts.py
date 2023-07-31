@@ -1,9 +1,10 @@
 from asyncio import gather
+from configs.settings import Settings
 from datetime import datetime
 from httpx import get, AsyncClient, ReadTimeout
 import motor.motor_asyncio
 from parsel import Selector
-from configs.settings import Settings
+
 from scrapper.models import ProductModel, StatusProduto, UpdateProductModel
 from scrapper.models import ObjectId
 
@@ -23,11 +24,9 @@ async def raspa_um_produto(produto_id: ObjectId):
          response_produto = await http_client.get(produto['url'], timeout=50, follow_redirects=True)
 
         except ReadTimeout:
-            print('Timeout')
             return ('Timeout')
 
         if response_produto.status_code != 200:
-            print(response_produto.status_code)
             return ('Resposta errada')
 
         sel_prod = Selector(text=response_produto.content.decode())
@@ -102,7 +101,7 @@ async def raspagem_catalogo_produtos(max_paginas=1) -> (list[ProductModel], dict
                 # Marca para ser atualizado
                 else:
                     produto_registrado['status'] = StatusProduto.DRAFT
-                    atualiza_status = db['produto'].update_one({'_id': produto_registrado['_id']}, {'$set': {
+                    db['produto'].update_one({'_id': produto_registrado['_id']}, {'$set': {
                         'status': StatusProduto.DRAFT}})
     return ids_produtos, urls_produtos_erros
 
@@ -112,6 +111,6 @@ async def raspar_urls_produtos():
     produtos_ids = [p['_id'] for p in produtos]
     grupos_produtos = [produtos_ids[x:x + 10] for x in range(0, len(produtos_ids), 10)]
     for grupo in grupos_produtos:
-        await gather(*[raspa_um_produto(_id) for _id in grupo]
+        await gather(
+            *[raspa_um_produto(_id) for _id in grupo]
         )
-        print('proximo grupo')
